@@ -754,7 +754,7 @@ function MonDKP:StartBidTimer(seconds, title, itemIcon)
 	local alpha = 1;
 
 	MonDKP.BidTimer = MonDKP.BidTimer or MonDKP:CreateTimer();		-- recycles bid timer frame so multiple instances aren't created
-	MonDKP.BidTimer:SetShown(not MonDKP.BidTimer:IsShown())					-- shows if not shown
+	MonDKP.BidTimer:SetShown(true);
 	MonDKP.BidTimer:SetMinMaxValues(0, duration or 20)
 	MonDKP.BidTimer.timerTitle:SetText(title)
 	MonDKP.BidTimer.itemIcon:SetTexture(itemIcon)
