@@ -14,6 +14,7 @@ local timerToggle = 0;
 local mode;
 local events = CreateFrame("Frame", "EventsFrame");
 local menuFrame = CreateFrame("Frame", "MonDKPBidWindowMenuFrame", UIParent, "UIDropDownMenuTemplate")
+local rebroadcastedTimerDuration = 10;
 
 local function UpdateBidWindow()
 	core.BiddingWindow.item:SetText(CurrItemForBid)
@@ -116,8 +117,15 @@ function MonDKP_CHAT_MSG_WHISPER(text, ...)
 								table.insert(Bids_Submitted, {player=name, dkp=dkp})
 								response = L["BIDWASACCEPTED"]
 							end
-								
+						
 							BidScrollFrame_Update()
+							
+							-- bid was accepted, backward compatible update timer for all 
+							if (mode == "Minimum Bid Values" or (mode == "Zero Sum" and MonDKP_DB.modes.ZeroSumBidType == "Minimum Bid")) and MonDKP.BidTimer then
+								if MonDKP_DB.modes.CostSelection == "First Bidder" and Bids_Submitted[1] then
+									MonDKP:BroadcastBidTimer(rebroadcastedTimerDuration, core.BiddingWindow.item:GetText().." Highest Bid: "..Bids_Submitted[1].bid, CurrItemIcon)
+								end
+							end
 						else
 							response = L["BIDDENIEDMINBID"].." "..core.BiddingWindow.minBid:GetNumber().."!"
 						end
@@ -766,10 +774,17 @@ function MonDKP:StartBidTimer(seconds, title, itemIcon)
 	local messageSent = { false, false, false, false, false, false }
 	local expiring;
 	local audioPlayed = false;
-
+	rebroadcastedTimerDuration = 10;
+	
 	MonDKP.BidTimer:SetScript("OnUpdate", function(self, elapsed)
 		timer = timer + elapsed
 		timerText = MonDKP_round(duration - timer, 1)
+		rebroadcastedTimerDuration = timerText;
+		
+		if rebroadcastedTimerDuration <= 10 then
+			rebroadcastedTimerDuration = 10; -- TODO: Make this configurable
+		end
+		
 		if tonumber(timerText) > 60 then
 			timerMinute = math.floor(tonumber(timerText) / 60, 0);
 			modulo = bit.mod(tonumber(timerText), 60);
