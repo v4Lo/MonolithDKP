@@ -109,15 +109,15 @@ function MonDKP:AutoAward(phase, amount, reason) -- phase identifies who to awar
 			if phase == 1 or phase == 3 and tempList ~= "" then
 				tinsert(temp_table, {seed = MonDKP_DKPHistory.seed, {players=tempList, dkp=amount, reason=reason, date=curTime}})
 				MonDKP.Sync:SendData("MonDKPDKPAward", temp_table[1])
-				MonDKP.Sync:SendData("MonDKPBroadcast", L["RAIDDKPADJUSTBY"].." "..amount.." "..L["FORREASON"]..": "..reason)
 			end
 			if phase == 2 or phase == 3 and tempList2 ~= "" then
 				tinsert(temp_table2, {seed = MonDKP_DKPHistory.seed, {players=tempList2, dkp=amount, reason=reason.." (Standby)", date=curTime+1}})
 				MonDKP.Sync:SendData("MonDKPDKPAward", temp_table2[1])
-				MonDKP.Sync:SendData("MonDKPBroadcast", L["STANDBYADJUSTBY"].." "..amount.." "..L["FORREASON"]..": "..reason)
 			end
 			table.wipe(temp_table)
 			table.wipe(temp_table2)
+
+			MonDKP.Sync:SendData("MonDKPBroadcast", L["RAIDDKPADJUSTBY"].." "..amount.." "..L["FORREASON"]..": "..reason)
 		end
 	end
 end
@@ -143,11 +143,11 @@ function MonDKP_Standby_Handler(text, ...)
 
 			if search and not verify then
 				table.insert(MonDKP_Standby, MonDKP_DKPTable[search[1][1]])
-				response = "MonolithDKP: "..cmd.." "..L["STANDBYWHISPERRESP1"]
+				response = cmd.." has been added to standby."
 			elseif search and verify then
-				response = "MonolithDKP: "..cmd.." "..L["STANDBYWHISPERRESP2"]
+				response = cmd.." is already on standby."
 			else
-				response = "MonolithDKP: "..cmd.." "..L["STANDBYWHISPERRESP3"];
+				response = cmd.." is invalid. Player not found.";
 			end
 		else
 			-- if it's just !standby
@@ -156,23 +156,15 @@ function MonDKP_Standby_Handler(text, ...)
 
 			if search and not verify then
 				table.insert(MonDKP_Standby, MonDKP_DKPTable[search[1][1]])
-				response = "MonolithDKP: "..L["STANDBYWHISPERRESP4"]
+				response = "You have been added to standby."
 			elseif search and verify then
-				response = "MonolithDKP: "..L["STANDBYWHISPERRESP5"]
+				response = "You are already on standby."
 			else
-				response = "MonolithDKP: "..L["STANDBYWHISPERRESP6"];
+				response = "Player not found.";
 			end
 		end
 		if CheckRaidLeader() then 						 -- only raid leader responds to add.
 			SendChatMessage(response, "WHISPER", nil, name)
 		end
 	end
-
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", function(self, event, msg, ...)		-- suppresses outgoing whisper responses to limit spam
-		if core.StandbyActive and MonDKP_DB.defaults.SupressTells then
-			if strfind(msg, "MonolithDKP: ") then
-				return true
-			end
-		end
-	end)
 end

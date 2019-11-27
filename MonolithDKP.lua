@@ -525,7 +525,7 @@ function MonDKP:CreateMenu()
     end)
 
     MonDKP.ChangeLogDisplay.Notes:SetText("|CFFAEAEDD"..L["BESTPRACTICES"].."|r")
-    MonDKP.ChangeLogDisplay.VerNumber:SetText(core.MonVersion)
+    --MonDKP.ChangeLogDisplay.VerNumber:SetText(core.MonVersion)
 
     --------------------------------------
     -- ChangeLog variable calls (bottom of localization files)
@@ -533,7 +533,7 @@ function MonDKP:CreateMenu()
     MonDKP.ChangeLogDisplay.ChangeLogText:SetText(L["CHANGELOG1"].."\n\n"..L["CHANGELOG2"].."\n\n"..L["CHANGELOG3"].."\n\n"..L["CHANGELOG4"].."\n\n"..L["CHANGELOG5"].."\n\n"..L["CHANGELOG6"].."\n\n"..L["CHANGELOG7"].."\n\n"..L["CHANGELOG8"].."\n\n"..L["CHANGELOG9"].."\n\n"..L["CHANGELOG10"]);
 
     local logHeight = MonDKP.ChangeLogDisplay.ChangeLogHeader:GetHeight() + MonDKP.ChangeLogDisplay.Notes:GetHeight() + MonDKP.ChangeLogDisplay.VerNumber:GetHeight() + MonDKP.ChangeLogDisplay.ChangeLogText:GetHeight();
-    MonDKP.ChangeLogDisplay:SetSize(800, logHeight);  -- resize container
+    MonDKP.ChangeLogDisplay:SetSize(800, logHeight + 10);  -- resize container
   end
 
   ---------------------------------------

@@ -228,7 +228,7 @@ function MonDKP_CHAT_MSG_WHISPER(text, ...)
 			end
 		end
 		
-		if strfind(msg, "!dkp") == 1 and MonDKP_DB.defaults.SupressTells then
+		if strfind(msg, "!dkp") == 1 then
 			return true
 		end
 	end)
